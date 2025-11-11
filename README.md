@@ -42,8 +42,9 @@ git clone https://github.com/naveeng8731/grafana-monitoring.git
 cd grafana-monitoring
 
 sudo docker-compose up -d
+-------------------------
 sudo docker ps
-
+-----------------------
 You should see containers like:
 • prometheus
 • grafana
@@ -67,6 +68,7 @@ Service	URL	Port	Description
 👤 Author
 Naveen G
 GitHub: https://github.com/naveeng8731
+
 
 
 
