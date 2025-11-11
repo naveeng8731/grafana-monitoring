@@ -1,0 +1,12 @@
+cat <<EOF > linux-targets.json
+[
+  {
+    "targets": ["192.168.2.101:9100", "192.168.2.102:9100"],
+    "labels": {
+      "job": "linux-exporter",
+      "os": "linux"
+    }
+  }
+]
+EOF
+

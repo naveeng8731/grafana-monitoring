@@ -1,0 +1,19 @@
+global:
+  smtp_smarthost: 'smtp.yourmailserver.com:587'
+  smtp_from: 'alerts@your-domain.com'
+  smtp_auth_username: 'alerts@your-domain.com'
+  smtp_auth_password: 'yourpassword'
+
+route:
+  receiver: 'email-alert'
+
+receivers:
+  - name: 'email-alert'
+    email_configs:
+      - to: 'admin@your-domain.com'
+        send_resolved: true
+        html: '{{ template "EmailTemplate.tmpl" . }}'
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+

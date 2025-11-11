@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    environment:
+      - TZ=Asia/Kolkata
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
+      - ./prometheus/rules-url.yml:/etc/prometheus/rules-url.yml
+      - ./prometheus/alertmanager.yml:/etc/prometheus/alertmanager.yml
+      - ./prometheus/templates:/etc/prometheus/templates
+      - ./prometheus/blackbox:/etc/prometheus/blackbox
+      - /etc/localtime:/etc/localtime:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=7d'
+    restart: unless-stopped
+    depends_on:
+      - alertmanager
+    networks:
+      - monitoring-net
+
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    container_name: alertmanager
+    environment:
+      - TZ=Asia/Kolkata
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./prometheus/templates:/etc/alertmanager/templates
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - TZ=Asia/Kolkata
+      - GF_SERVER_ROOT_URL=https://your-domain.com/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_INSTALL_PLUGINS=flant-statusmap-panel
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/config.yaml:/etc/loki/config.yaml
+      - ./loki/data:/loki
+    command: -config.file=/etc/loki/config.yaml
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/log:/host/var/log:ro
+      - ./promtail/promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  blackbox:
+    image: prom/blackbox-exporter:v0.24.0
+    container_name: blackbox
+    volumes:
+      - ./prometheus/blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml
+    ports:
+      - "9115:9115"
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - grafana
+      - prometheus
+      - alertmanager
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+volumes:
+  grafana-storage:
+
+networks:
+  monitoring-net:
+    driver: bridge
+
