@@ -12,7 +12,7 @@ Ensure the following are installed before running this setup:
 - Docker Compose v2+
 - Linux host with internet access
 
----
+
 
 ## 📂 Folder Structure
 ----
@@ -41,7 +41,7 @@ grafana-monitoring/
 │       └── EmailTemplate.tmpl
 └── scripts/
     └── generate_targets.sh
-----
+
 ⚙️ Setup Instructions
 Clone this repository and start the stack:
 
@@ -75,6 +75,7 @@ Service	URL	Port	Description
 👤 Author
 Naveen G
 GitHub: https://github.com/naveeng8731
+
 
 
 
