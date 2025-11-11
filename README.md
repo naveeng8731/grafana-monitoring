@@ -1,12 +1,14 @@
  HEAD
-Grafana Monitoring Stack
+######Grafana Monitoring Stack
+------------------------
 A lightweight, containerized observability stack built with Prometheus, Grafana, Alertmanager, and Loki — designed for centralized infrastructure, application, and log monitoring across Linux, Windows, and macOS systems.
+----------------------
 🧩 Prerequisites
 Ensure the following are installed before running this setup:
 • Docker v20.10+
 • Docker Compose v2+
 • Linux host with internet access
-
+----------------------------------
 📂 Folder Structure
 
 grafana-monitoring/
@@ -68,6 +70,7 @@ Service	URL	Port	Description
 👤 Author
 Naveen G
 GitHub: https://github.com/naveeng8731
+
 
 
 
