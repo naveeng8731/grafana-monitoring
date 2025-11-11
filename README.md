@@ -7,36 +7,6 @@ Ensure the following are installed before running this setup:
 • Docker Compose v2+
 • Linux host with internet access
 
-fole
-
-grafana-monitoring/
-├── docker-compose.yml
-├── grafana/
-│ ├── grafana.ini
-│ └── provisioning/
-│ └── datasources/
-│ └── datasource.yml
-├── nginx/
-│ ├── conf.d/
-│ │ └── monitoring.conf
-│ └── nginx.conf
-├── prometheus/
-│ ├── alertmanager.yml
-│ ├── blackbox/
-│ │ └── blackbox.yml
-│ ├── linux-targets.json
-│ ├── macos-targets.json
-│ ├── windows-targets.json
-│ ├── prometheus.yml
-│ ├── rules.yml
-│ ├── rules-url.yml
-│ └── templates/
-│ └── EmailTemplate.tmpl
-└── scripts/
-└── generate_targets.sh
-
-
-
 📂 Folder Structure
 
 grafana-monitoring/
@@ -97,6 +67,7 @@ Service	URL	Port	Description
 👤 Author
 Naveen G
 GitHub: https://github.com/naveeng8731
+
 
 
 
