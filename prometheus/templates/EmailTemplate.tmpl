@@ -1,0 +1,25 @@
+{{ define "email.default.subject" }}[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}{{ end }}
+
+{{ define "email.default.html" }}
+<html>
+  <body>
+    <h1>Alert Details</h1>
+    {{ range .Alerts }}
+      <hr>
+      <p><strong>Instance:</strong> {{ .Labels.instance }}</p>
+      <p><strong>Status:</strong> {{ .Status }}</p>
+      <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+      <p><strong>Triggered At:</strong> {{ .StartsAt }}</p>
+
+      {{ if eq .Labels.alertname "URLDown" }}
+        <p style="color:red;"><strong>URL Status:</strong> DOWN</p>
+        {{ if (index .Labels "probe_http_status_code") }}
+          <p><strong>HTTP Status Code:</strong> {{ index .Labels "probe_http_status_code" }}</p>
+        {{ end }}
+      {{ end }}
+
+    {{ end }}
+    <p style="margin-top:20px;">— <br> Monitoring Team</p>
+  </body>
+</html>
+{{ end }}
