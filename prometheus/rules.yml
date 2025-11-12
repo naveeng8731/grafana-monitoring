@@ -1,0 +1,65 @@
+groups:
+  - name: system-alerts
+    rules:
+      - alert: ExporterDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "❌ Instance down: {{ $labels.instance }}"
+          description: "{{ $labels.job }} on {{ $labels.instance }} is not reachable."
+
+      - alert: HighLinuxCPU
+        expr: (100 - avg by (instance)(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ High CPU usage on Linux host {{ $labels.instance }}"
+          description: "CPU usage > 85% for 5 minutes on Linux node."
+
+      - alert: HighWindowsCPU
+        expr: (100 - avg by (instance)(rate(windows_cpu_time_total{mode="idle"}[2m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ High CPU usage on Windows {{ $labels.instance }}"
+          description: "Windows system {{ $labels.instance }} has high CPU load."
+
+      - alert: HighLinuxMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ High memory usage on Linux {{ $labels.instance }}"
+          description: "Memory usage > 90% for 5 minutes."
+
+      - alert: HighWindowsMemoryUsage
+        expr: (windows_memory_commit_bytes / windows_memory_commit_limit_bytes) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ High memory usage on Windows {{ $labels.instance }}"
+          description: "Memory usage > 90% for 5 minutes."
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_free_bytes or windows_logical_disk_free_bytes) / (node_filesystem_size_bytes or windows_logical_disk_size_bytes) < 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ Low disk space on {{ $labels.instance }}"
+          description: "Disk space is below 10% on {{ $labels.instance }}"
+
+      - alert: WindowsServiceFailure
+        expr: windows_service_status{status="ok"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "❌ Windows service failure on {{ $labels.instance }}"
+          description: "Service {{ $labels.name }} is not running properly on {{ $labels.instance }}"
