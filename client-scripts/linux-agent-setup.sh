@@ -4,7 +4,7 @@
 VERSION="1.7.0"
 EXPORTER_URL="https://github.com/prometheus/node_exporter/releases/download/v$VERSION/node_exporter-$VERSION.linux-amd64.tar.gz"
 REMOTE_USER="root"
-REMOTE_HOST="prometheus-ip"
+REMOTE_HOST="192.168.0.82" ##prometheus-ip
 REMOTE_TARGET_FILE="/srv/grafana-monitoring/prometheus/linux-targets.json"
 
 # ---- Step 1: Install Node Exporter ----

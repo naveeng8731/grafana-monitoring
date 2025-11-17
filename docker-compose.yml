@@ -67,20 +67,9 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./loki/config.yaml:/etc/loki/config.yaml
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
       - ./loki/data:/loki
-    command: -config.file=/etc/loki/config.yaml
-    restart: unless-stopped
-    networks:
-      - monitoring-net
-
-  promtail:
-    image: grafana/promtail:latest
-    container_name: promtail
-    volumes:
-      - /var/log:/host/var/log:ro
-      - ./promtail/promtail-config.yaml:/etc/promtail/config.yaml
-    command: -config.file=/etc/promtail/config.yaml
+    command: -config.file=/etc/loki/loki-config.yaml
     restart: unless-stopped
     networks:
       - monitoring-net
