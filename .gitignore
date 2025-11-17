@@ -1,0 +1,15 @@
+# Loki data folders (must not be committed)
+loki/data/
+loki/config.yaml/
+
+# Prometheus data (optional, if exists)
+prometheus/data/
+
+# Grafana data (optional)
+grafana/data/
+
+# System/temporary files
+*.log
+*.tmp
+*.swp
+
