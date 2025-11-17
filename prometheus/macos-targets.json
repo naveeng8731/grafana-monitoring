@@ -1,12 +1,8 @@
-cat <<EOF > macos-targets.json
 [
   {
-    "targets": ["192.168.2.111:9100"],
+    "targets": [],
     "labels": {
-      "job": "macos-exporter",
-      "os": "macos"
+      "role": "macos"
     }
   }
 ]
-EOF
-
