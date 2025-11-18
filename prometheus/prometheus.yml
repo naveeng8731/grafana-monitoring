@@ -3,6 +3,7 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
+
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -14,7 +15,7 @@ scrape_configs:
   - job_name: 'linux-nodes'
     file_sd_configs:
       - files:
-          - '/srv/grafana-monitoring/prometheus/linux-targets.json'
+          - '/etc/prometheus/linux-targets.json'
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
@@ -22,7 +23,7 @@ scrape_configs:
   - job_name: 'windows-nodes'
     file_sd_configs:
       - files:
-          - '/srv/grafana-monitoring/prometheus/windows-targets.json'
+          - '/etc/prometheus/windows-targets.json'
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
@@ -30,7 +31,7 @@ scrape_configs:
   - job_name: 'macos-nodes'
     file_sd_configs:
       - files:
-          - '/srv/grafana-monitoring/prometheus/macos-targets.json'
+          - '/etc/prometheus/macos-targets.json'
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
@@ -39,14 +40,14 @@ scrape_configs:
     metrics_path: /probe
     params:
       module: [http_2xx]
-    static_configs:
-      - targets:
-          - https://your-domain.com or  - /etc/prometheus/url_targets.json
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/url_targets.json'
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
-      - target_label: instance
-        source_labels: [__param_target]
+      - source_labels: [__param_target]
+        target_label: instance
       - target_label: __address__
         replacement: blackbox:9115
 
