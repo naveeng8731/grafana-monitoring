@@ -16,31 +16,42 @@ Ensure the following are installed before running this setup:
 
 ## 📂 Folder Structure
 ----
-grafana-monitoring/
-├── docker-compose.yml
-├── grafana/
-│   ├── grafana.ini
-│   └── provisioning/
-│       └── datasources/
-│           └── datasource.yml
-├── nginx/
-│   ├── conf.d/
-│   │   └── monitoring.conf
-│   └── nginx.conf
-├── prometheus/
-│   ├── alertmanager.yml
-│   ├── blackbox/
-│   │   └── blackbox.yml
-│   ├── linux-targets.json
-│   ├── macos-targets.json
-│   ├── windows-targets.json
-│   ├── prometheus.yml
-│   ├── rules.yml
-│   ├── rules-url.yml
-│   └── templates/
-│       └── EmailTemplate.tmpl
-└── scripts/
-    └── generate_targets.sh
+
+└── grafana-monitoring
+    ├── client-scripts
+    │   ├── linux-agent-setup.sh
+    │   └── windows-agent-setup.ps1
+    ├── docker-compose.yml
+    ├── grafana
+    │   ├── grafana.ini
+    │   └── provisioning
+    │       └── datasources
+    │           └── datasource.yml
+    ├── loki
+    │   ├── data
+    │   │      
+    │   └── loki-config.yaml
+    ├── nginx
+    │   ├── conf.d
+    │   │   └── monitoring.conf
+    │   ├── nginx.conf
+    │   └── ssl
+    ├── prometheus
+    │   ├── alertmanager.yml
+    │   ├── blackbox
+    │   │   └── blackbox.yml
+    │   ├── generate_targets.sh
+    │   ├── linux-targets.json
+    │   ├── macos-targets.json
+    │   ├── prometheus.yml
+    │   ├── rules-url.yml
+    │   ├── rules.yml
+    │   ├── templates
+    │   │   └── EmailTemplate.tmpl
+    │   └── windows-targets.json
+    └── README.md
+
+
 
 ⚙️ Setup Instructions
 Clone this repository and start the stack:
@@ -75,6 +86,7 @@ Service	URL	Port	Description
 👤 Author
 Naveen G
 GitHub: https://github.com/naveeng8731
+
 
 
 
