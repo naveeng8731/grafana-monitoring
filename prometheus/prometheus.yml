@@ -1,53 +1,78 @@
 global:
   scrape_interval: 15s
-  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['192.168.0.82:9093']
+
+rule_files:
+  - "rules.yml"
+  - "rules-url.yml"
 
 scrape_configs:
-
   - job_name: 'prometheus'
+    metrics_path: /prometheus/metrics
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['192.168.0.82:9090']
 
-  - job_name: 'node-exporter'
+  - job_name: 'central-node'
     static_configs:
       - targets: ['node-exporter:9100']
 
-  - job_name: 'linux-nodes'
+  - job_name: 'linux-exporters'
     file_sd_configs:
       - files:
-          - '/etc/prometheus/linux-targets.json'
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
+          - linux-targets.json
+        refresh_interval: 30s
 
-  - job_name: 'windows-nodes'
+  - job_name: 'windows-exporters'
     file_sd_configs:
       - files:
-          - '/etc/prometheus/windows-targets.json'
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
+          - windows-targets.json
+        refresh_interval: 30s
 
-  - job_name: 'macos-nodes'
+  - job_name: 'cadvisor'
     file_sd_configs:
       - files:
-          - '/etc/prometheus/macos-targets.json'
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
+          - cadvisor-targets.json
+        refresh_interval: 30s
 
-  - job_name: 'blackbox'
+  - job_name: 'process-exporters'
+    file_sd_configs:
+      - files:
+          - process-targets.json
+        refresh_interval: 30s
+
+  - job_name: 'apache-exporters'
+    file_sd_configs:
+      - files:
+          - apache-targets.json
+        refresh_interval: 30s
+
+  - job_name: 'elasticsearch-exporters'
+    file_sd_configs:
+      - files:
+          - elasticsearch-targets.json
+        refresh_interval: 30s
+
+  # -------- Blackbox Exporter for URL monitoring --------
+
+  - job_name: 'url_monitor'
     metrics_path: /probe
     params:
       module: [http_2xx]
     file_sd_configs:
       - files:
-          - '/etc/prometheus/url_targets.json'
+          - /etc/prometheus/url_targets.json
+        refresh_interval: 30s
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
+      - source_labels: [module]
+        target_label: __param_module
       - target_label: __address__
         replacement: blackbox:9115
 
