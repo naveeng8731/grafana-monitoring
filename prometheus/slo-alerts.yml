@@ -1,0 +1,45 @@
+groups:
+  - name: slo-alerts
+    rules:
+
+      # FAST BURN - short window high error rate
+      - alert: SLOFastBurn
+        expr: (1 - avg_over_time(probe_success{job="url_monitor"}[5m])) > 0.005
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "🚨 Fast Burn: URL SLO at risk ({{ $labels.instance }})"
+          description: "High error rate in last 5m for instance {{ $labels.instance }} (job url_monitor)."
+
+      # SLOW BURN - sustained error use over 1h
+      - alert: SLOSlowBurn
+        expr: (1 - avg_over_time(probe_success{job="url_monitor"}[1h])) > 0.001
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠ Slow Burn: URL SLO degrading ({{ $labels.instance }})"
+          description: "Service consuming more than expected error budget over last 1 hour."
+
+      # NEAR BREACH - 30d window approaching SLO breach threshold
+      - alert: SLONearBreach
+        expr: (1 - avg_over_time(probe_success{job="url_monitor"}[30d])) > 0.0005
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "🔔 SLO Near Breach (30d average) for {{ $labels.instance }}"
+          description: "30d availability is approaching the defined SLO target."
+
+      # BREACH - 30d breach
+      - alert: SLOBreach
+        expr: (1 - avg_over_time(probe_success{job="url_monitor"}[30d])) > 0.001
+        for: 2h
+        labels:
+          severity: critical
+        annotations:
+          summary: "❌ SLO Breach (30d) for {{ $labels.instance }}"
+          description: "30d availability breached the SLO target."
+
+
